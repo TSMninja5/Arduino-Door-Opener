@@ -1,0 +1,54 @@
+
+
+const int knockSensor = 0;         
+const int switch = 2;       
+const int Motor = 3;           
+const int redLED = 4;              
+const int greenLED = 5;            
+ 
+
+           
+       
+const int averageRejectValue = 15; 
+const int threshold = 3;
+const int knockFadeTime = 150;     
+const int lockTurnTime = 650;      
+const int rejectValue = 25; 
+const int maximumKnocks = 20;       
+const int knockComplete = 1200;     
+
+
+
+int secretCode[maximumKnocks] = {75, 90, 25, 82, 100, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};  
+int knockReadings[maximumKnocks];   
+int knockSensorValue = 0;           
+int btnPress = false;   
+
+void setup() {
+  pinMode(lockMotor, OUTPUT);
+  pinMode(redLED, OUTPUT);
+  pinMode(greenLED, OUTPUT);
+  pinMode(switch, INPUT);
+  
+  Serial.begin(9600);               			
+  Serial.println("Program start.");  			
+  
+  digitalWrite(greenLED, HIGH);      
+}
+
+void loop() {
+
+  knockSensorValue = analogRead(knockSensor);
+  
+  if (digitalRead(switch)==HIGH){  
+    btnPress = true;          
+    digitalWrite(redLED, HIGH);           
+  } else {
+    btnPress = false;
+    digitalWrite(redLED, LOW);
+  }
+  
+  if (knockSensorValue >=threshold){
+    listenToSecretKnock();
+  }
+} 
